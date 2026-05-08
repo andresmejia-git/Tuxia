@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voya — Curated for the Discerning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #F5F0E8;
+      --warm-white: #FAF8F4;
+      --gold: #B8955A;
+      --gold-light: #D4AF78;
+      --charcoal: #1C1C1C;
+      --mid: #5C5448;
+      --soft: #9C9080;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-white);
+      color: var(--charcoal);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      opacity: 0.6;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 60px;
+      mix-blend-mode: normal;
+      background: linear-gradient(to bottom, rgba(250,248,244,0.95) 0%, transparent 100%);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--charcoal);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    .nav-links a:hover { color: var(--charcoal); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 160px 80px 80px 80px;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1.2s ease forwards 0.3s;
+    }
+
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(64px, 7vw, 104px);
+      font-weight: 300;
+      line-height: 0.95;
+      color: var(--charcoal);
+      margin-bottom: 40px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      line-height: 2;
+      color: var(--soft);
+      max-width: 340px;
+      margin-bottom: 56px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+      color: var(--charcoal);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      transition: gap 0.4s ease;
+    }
+
+    .hero-cta:hover { gap: 32px; }
+
+    .cta-line {
+      display: block;
+      width: 48px; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    .hero-cta:hover .cta-line { width: 72px; }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 1.6s ease forwards 0.6s;
+    }
+
+    .hero-image-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #E8DFD0 0%, #C9B99A 40%, #9C8870 100%);
+    }
+
+    .hero-geometric {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .geo-circle-outer {
+      width: 380px; height: 380px;
+      border: 1px solid rgba(184,149,90,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotateSlow 30s linear infinite;
+    }
+
+    .geo-circle-inner {
+      width: 260px; height: 260px;
+      border: 1px solid rgba(184,149,90,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotateSlow 20s linear infinite reverse;
+    }
+
+    .geo-center {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 80px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.9);
+      font-style: italic;
+      letter-spacing: -2px;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 60px;
+      right: 60px;
+      width: 110px; height: 110px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotateSlow 15s linear infinite;
+    }
+
+    .hero-badge svg {
+      width: 100%; height: 100%;
+      position: absolute;
+    }
+
+    .hero-badge-text {
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      background: var(--charcoal);
+      overflow: hidden;
+      padding: 20px 0;
+      border-top: 1px solid rgba(184,149,90,0.2);
+      border-bottom: 1px solid rgba(184,149,90,0.2);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 40px;
+      padding: 0 40px;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .marquee-dot {
+      width: 4px; height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* SECTION: ABOUT */
+    .section-about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 80vh;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .section-about.visible { opacity: 1; transform: translateY(0); }
+
+    .about-left {
+      background: var(--cream);
+      padding: 120px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--charcoal);
+      margin-bottom: 32px;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold); }
+
+    .section-body {
+      font-size: 13px;
+      line-height: 2.1;
+      color: var(--soft);
+      max-width: 400px;
+    }
+
+    .divider-gold {
+      width: 48px; height: 1px;
+      background: var(--gold);
+      margin: 36px 0;
+    }
+
+    .about-right {
+      background: var(--charcoal);
+      padding: 120px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    .stat-item { border-left: 1px solid rgba(184,149,90,0.3); padding-left: 28px; }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-top: 8px;
+    }
+
+    /* COLLECTION */
+    .section-collection {
+      padding: 120px 80px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .section-collection.visible { opacity: 1; transform: translateY(0); }
+
+    .collection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 64px;
+    }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .collection-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: var(--cream);
+      cursor: none;
+    }
+
+    .card-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.7s ease;
+    }
+
+    .collection-card:hover .card-bg { transform: scale(1.05); }
+
+    .card-bg-1 { background: linear-gradient(160deg, #D4C5B0 0%, #A89070 100%); }
+    .card-bg-2 { background: linear-gradient(160deg, #C5B8A8 0%, #8C7860 100%); }
+    .card-bg-3 { background: linear-gradient(160deg, #B8A898 0%, #7C6855 100%); }
+
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-shape {
+      width: 120px; height: 160px;
+      border: 1px solid rgba(255,255,255,0.4);
+      position: relative;
+    }
+
+    .card-shape::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px; right: -12px; bottom: -12px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .card-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 32px;
+      background: linear-gradient(to top, rgba(28,28,28,0.7) 0%, transparent 100%);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    .collection-card:hover .card-info { transform: translateY(0); opacity: 1; }
+
+    .card-tag {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 300;
+      color: white;
+    }
+
+    /* PHILOSOPHY */
+    .section-philosophy {
+      background: var(--charcoal);
+      padding: 140px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .section-philosophy.visible { opacity: 1; transform: translateY(0); }
+
+    .philosophy-deco {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      border: 1px solid rgba(184,149,90,0.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .philosophy-deco::before {
+      content: '';
+      position: absolute;
+      inset: 40px;
+      border: 1px solid rgba(184,149,90,0.06);
+      border-radius: 50%;
+    }
+
+    .philosophy-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.3;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .philosophy-quote span { color: var(--gold-light); }
+
+    .philosophy-attr {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--soft);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* NEWSLETTER */
+    .section-newsletter {
+      padding: 120px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .section-newsletter.visible { opacity: 1; transform: translateY(0); }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      border-bottom: 1px solid rgba(92,84,72,0.3);
+      padding-bottom: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .form-row:focus-within { border-color: var(--gold); }
+
+    .form-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--charcoal);
+      cursor: none;
+    }
+
+    .form-input::placeholder { color: var(--soft); }
+
+    .form-submit {
+      background: none;
+      border: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      cursor: none;
+      transition: letter-spacing 0.3s;
+    }
+
+    .form-submit:hover { letter-spacing: 0.35em; }
+
+    /* FOOTER */
+    footer {
+      background: var(--charcoal);
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 60px;
+      border-top: 1px solid rgba(184,149,90,0.15);
+    }
+
+    .footer-brand .nav-logo {
+      display: block;
+      color: var(--cream);
+      margin-bottom: 20px;
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--soft);
+      max-width: 220px;
+    }
+
+    .footer-col-title {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+
+    .footer-links a {
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--soft);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      background: var(--charcoal);
+      padding: 24px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer-copy {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(156,144,128,0.5);
+    }
+
+    .footer-socials { display: flex; gap: 28px; }
+
+    .footer-socials a {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(156,144,128,0.5);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-socials a:hover { color: var(--gold); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 24px 30px; }
+      .nav-links { gap: 24px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 140px 30px 60px; }
+      .hero-right { height: 60vw; }
+      .section-about { grid-template-columns: 1fr; }
+      .about-left, .about-right { padding: 80px 30px; }
+      .section-collection { padding: 80px 30px; }
+      .collection-grid { grid-template-columns: 1fr 1fr; }
+      .collection-card:last-child { display: none; }
+      .section-philosophy { padding: 100px 30px; }
+      .section-newsletter { grid-template-columns: 1fr; padding: 80px 30px; }
+      footer { grid-template-columns: 1fr; padding: 60px 30px; }
+      .footer-bottom { padding: 20px 30px; flex-direction: column; gap: 12px; }
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Voya</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <span class="hero-eyebrow">Est. 2025 — Curated Commerce</span>
+      <h1 class="hero-title">Beyond<br/><em>ordinary</em><br/>things.</h1>
+      <p class="hero-sub">Voya is a curated destination for those who seek products with purpose, beauty, and enduring quality.</p>
+      <a href="#collection" class="hero-cta">
+        <span class="cta-line"></span>
+        Explore
+      </a>
+    </div>
+    <div class="hero-right">
+      <div class="hero-image-bg"></div>
+      <div class="hero-geometric">
+        <div class="geo-circle-outer">
+          <div class="geo-circle-inner">
+            <span class="geo-center">V</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-badge">
+        <span class="hero-badge-text">Curated<br/>for you</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Curated Quality <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Timeless Design <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Thoughtful Sourcing <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Elevated Living <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Curated Quality <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Timeless Design <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Thoughtful Sourcing <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Elevated Living <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Curated Quality <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Timeless Design <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Thoughtful Sourcing <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Elevated Living <span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="section-about" id="about">
+    <div class="about-left">
+      <span class="section-label">Our Story</span>
+      <h2 class="section-title">We believe in the <em>art</em> of selection.</h2>
+      <div class="divider-gold"></div>
+      <p class="section-body">Voya was born from a simple conviction — that what you bring into your life should mean something. We search the world for products that are made with intention, built to last, and worthy of your attention.</p>
+    </div>
+    <div class="about-right">
+      <div class="stat-item">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Curated Products</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">24h</div>
+        <div class="stat-label">Customer Support</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Commitment to Quality</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLECTION -->
+  <section class="section-collection" id="collection">
+    <div class="collection-header">
+      <div>
+        <span class="section-label">Featured</span>
+        <h2 class="section-title">Our <em>Collections</em></h2>
+      </div>
+      <a href="#contact" class="hero-cta">
+        <span class="cta-line"></span>
+        View All
+      </a>
+    </div>
+    <div class="collection-grid">
+      <div class="collection-card">
+        <div class="card-bg card-bg-1"></div>
+        <div class="card-inner"><div class="card-shape"></div></div>
+        <div class="card-info">
+          <div class="card-tag">New Arrival</div>
+          <div class="card-name">Essential Objects</div>
+        </div>
+      </div>
+      <div class="collection-card">
+        <div class="card-bg card-bg-2"></div>
+        <div class="card-inner"><div class="card-shape"></div></div>
+        <div class="card-info">
+          <div class="card-tag">Curated</div>
+          <div class="card-name">Living Well</div>
+        </div>
+      </div>
+      <div class="collection-card">
+        <div class="card-bg card-bg-3"></div>
+        <div class="card-inner"><div class="card-shape"></div></div>
+        <div class="card-info">
+          <div class="card-tag">Signature</div>
+          <div class="card-name">The Voya Edit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section class="section-philosophy">
+    <div class="philosophy-deco"></div>
+    <p class="philosophy-quote">"The things you own should <span>elevate</span> the life you live."</p>
+    <span class="philosophy-attr">— The Voya Philosophy</span>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="section-newsletter" id="contact">
+    <div>
+      <span class="section-label">Stay Connected</span>
+      <h2 class="section-title">Be the first to<br/><em>discover</em> more.</h2>
+      <div class="divider-gold"></div>
+      <p class="section-body">Join our inner circle and receive curated selections, early access, and stories behind the things we love.</p>
+    </div>
+    <div class="newsletter-form">
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Your name"/>
+      </div>
+      <div class="form-row">
+        <input class="form-input" type="email" placeholder="Your email address"/>
+        <button class="form-submit">Join →</button>
+      </div>
+      <p style="font-size:10px; letter-spacing:0.1em; color:var(--soft);">No spam, ever. Unsubscribe anytime.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Voya</a>
+      <p class="footer-tagline">A curated destination for products with purpose and beauty.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#collection">Collection</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="mailto:hello@voya.com">hello@voya.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Pinterest</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Voya. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">Pinterest</a>
+      <a href="#">TikTok</a>
+    </div>
+  </div>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    });
+
+    (function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.section-about, .section-collection, .section-philosophy, .section-newsletter');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
