@@ -829,67 +829,67 @@
 
   <!-- CONTACT -->
   <section class="contact" id="contact">
-    <div class="contact-left">
-      <span class="section-label">Get In Touch</span>
-      <h2 class="section-title">Ready to <em>distribute</em> with us?</h2>
-      <p style="font-size:14px; line-height:1.9; color:var(--gray-600); margin-top:20px;">Whether you are a product manufacturer, wholesaler, or brand looking to expand online — we would love to hear from you. Tell us about your products and let's explore how we can work together.</p>
-      <div class="contact-details">
-        <div class="contact-row">
-          <span class="contact-row-label">Email</span>
-          <a href="mailto:contact@tuxiashop.com" class="contact-row-value">contact@tuxiashop.com</a>
-        </div>
-        <div class="contact-row">
-          <span class="contact-row-label">Location</span>
-          <span class="contact-row-value">Houston, Texas, USA</span>
-        </div>
-        <div class="contact-row">
-          <span class="contact-row-label">Response</span>
-          <span class="contact-row-value">Within 24 hours</span>
-        </div>
-        <div class="contact-row">
-          <span class="contact-row-label">Partnerships</span>
-          <span class="contact-row-value">Open to all categories</span>
-        </div>
+  <div class="contact-left">
+    <span class="section-label">Get In Touch</span>
+    <h2 class="section-title">Ready to <em>distribute</em> with us?</h2>
+    <p style="font-size:14px; line-height:1.9; color:var(--gray-600); margin-top:20px;">Whether you are a product manufacturer, wholesaler, or brand looking to expand online — we would love to hear from you. Tell us about your products and let's explore how we can work together.</p>
+    <div class="contact-details">
+      <div class="contact-row">
+        <span class="contact-row-label">Email</span>
+        <a href="mailto:hello@tuxiashop.com" class="contact-row-value">hello@tuxiashop.com</a>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row-label">Location</span>
+        <span class="contact-row-value">Houston, Texas, USA</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row-label">Response</span>
+        <span class="contact-row-value">Within 24 hours</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row-label">Partnerships</span>
+        <span class="contact-row-value">Open to all categories</span>
       </div>
     </div>
-    <div>
-      <form class="contact-form" id="contactForm" action="https://formspree.io/f/xlgzplkw" method="POST" onsubmit="handleSubmit(event)">
-        <div class="two-col">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <input class="form-input" type="text" name="first_name" placeholder="John" required/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" name="last_name" placeholder="Smith" required/>
-          </div>
+  </div>
+  <div>
+    <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)">
+      <div class="two-col">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" name="first_name" placeholder="John" required/>
         </div>
         <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" name="email" placeholder="john@yourcompany.com" required/>
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" name="last_name" placeholder="Smith" required/>
         </div>
-        <div class="form-group">
-          <label class="form-label">Company Name</label>
-          <input class="form-input" type="text" name="company" placeholder="Your company or brand name" required/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Product Category</label>
-          <input class="form-input" type="text" name="product_category" placeholder="e.g. Home goods, Electronics, Personal care..."/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tell Us About Your Products</label>
-          <textarea class="form-textarea" name="message" placeholder="Describe what you sell, your current volume, and what you are looking for in a distribution partner..."></textarea>
-        </div>
-        <div class="form-footer">
-          <span class="form-note">We respond to all inquiries within 96 hours.</span>
-          <button type="submit" class="btn-submit">Send Inquiry →</button>
-        </div>
-      </form>
-      <div class="success-msg" id="successMsg">
-        <p>Thank you for reaching out to Tuxia Shop.<br/>We will review your inquiry and get back to you within 96 hours.</p>
       </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" name="email" placeholder="john@yourcompany.com" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company Name</label>
+        <input class="form-input" type="text" name="company" placeholder="Your company or brand name" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Product Category</label>
+        <input class="form-input" type="text" name="product_category" placeholder="e.g. Home goods, Electronics, Personal care..."/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tell Us About Your Products</label>
+        <textarea class="form-textarea" name="message" placeholder="Describe what you sell, your current volume, and what you are looking for in a distribution partner..."></textarea>
+      </div>
+      <div class="form-footer">
+        <span class="form-note">We respond to all inquiries within 24 hours.</span>
+        <button type="submit" class="btn-submit">Send Inquiry →</button>
+      </div>
+    </form>
+    <div class="success-msg" id="successMsg">
+      <p>Thank you for reaching out to Tuxia Shop.<br/>We will review your inquiry and get back to you within 24 hours.</p>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- FOOTER -->
   <footer>
@@ -961,11 +961,26 @@
     });
 
     // Form
-    function handleSubmit(e) {
-      e.preventDefault();
-      document.getElementById('contactForm').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
+    async function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('contactForm');
+    const data = new FormData(form);
+    try {
+      const response = await fetch('https://formspree.io/f/xlgzplkw', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        form.style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } else {
+        alert('Something went wrong. Please email us at hello@tuxiashop.com');
+      }
+    } catch (err) {
+      alert('Something went wrong. Please email us at hello@tuxiashop.com');
     }
+  }
   </script>
 </body>
 </html>
